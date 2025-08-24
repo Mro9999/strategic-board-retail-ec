@@ -24,7 +24,7 @@
             border-radius: 4px;
             background: #ddd;
             outline: none;
-            touch-action: manipulation;
+            transition: background 0.3s;
         }
         .slider::-webkit-slider-thumb {
             -webkit-appearance: none;
@@ -35,32 +35,37 @@
             background: #4f46e5;
             cursor: pointer;
             box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            background: #3730a3;
+        }
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #4f46e5;
+            cursor: pointer;
+            border: none;
+        }
+        .element-node {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .element-node:hover {
+            transform: scale(1.05);
         }
         .success-meter {
             background: conic-gradient(from 0deg, #ef4444 0deg, #f59e0b 120deg, #10b981 240deg, #10b981 360deg);
             border-radius: 50%;
         }
         @media (max-width: 768px) {
-            .mobile-stack {
-                display: block !important;
+            .mobile-chart {
+                height: 500px !important;
             }
-            .mobile-full {
-                width: 100% !important;
-                margin-bottom: 1.5rem;
-            }
-            .chart-container {
+            .mobile-correlation-chart {
                 height: 400px !important;
-            }
-            .correlation-container {
-                height: 350px !important;
-            }
-        }
-        @media (min-width: 769px) {
-            .chart-container {
-                height: 500px;
-            }
-            .correlation-container {
-                height: 400px;
             }
         }
     </style>
@@ -72,138 +77,144 @@
             <h1 class="text-2xl md:text-3xl font-bold mb-2">
                 <i class="fas fa-store mr-3"></i>小売・EC業界 戦略バランスボード
             </h1>
-            <p class="text-lg opacity-90">オムニチャネル時代の事業成功指標 - DEARS CONSULTINGオリジナルツール</p>
+            <p class="text-lg opacity-90">オムニチャネル時代の事業成功動的相関図 - DEARS CONSULTING</p>
         </div>
 
         <!-- Main Content -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mobile-stack">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <!-- Control Panel -->
-            <div class="lg:col-span-4 mobile-full">
-                <div class="space-y-4">
-                    <div class="bg-white rounded-lg p-6 card-shadow">
-                        <h2 class="text-xl font-bold mb-4 text-gray-800">
-                            <i class="fas fa-sliders-h mr-2"></i>要素調整パネル
-                        </h2>
-                        
-                        <div class="space-y-6">
-                            <div class="slider-container">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">商品力</label>
-                                <input type="range" min="1" max="100" value="75" class="slider" id="product">
-                                <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                    <span>標準品</span><span id="productValue">75</span><span>独自性高</span>
-                                </div>
+            <div class="lg:col-span-4 space-y-4 order-2 lg:order-1">
+                <div class="bg-white rounded-lg p-6 card-shadow">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800">
+                        <i class="fas fa-sliders-h mr-2 text-blue-600"></i>要素調整パネル
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <div class="slider-container">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-box mr-2"></i>商品力
+                            </label>
+                            <input type="range" min="1" max="100" value="70" class="slider" id="product">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>基本</span><span id="productValue" class="font-bold">70</span><span>最高級</span>
                             </div>
+                        </div>
 
-                            <div class="slider-container">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">立地・アクセス</label>
-                                <input type="range" min="1" max="100" value="60" class="slider" id="location">
-                                <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                    <span>不便</span><span id="locationValue">60</span><span>好立地</span>
-                                </div>
+                        <div class="slider-container">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-map-marker-alt mr-2"></i>立地・アクセス
+                            </label>
+                            <input type="range" min="1" max="100" value="65" class="slider" id="location">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>不便</span><span id="locationValue" class="font-bold">65</span><span>最適</span>
                             </div>
+                        </div>
 
-                            <div class="slider-container">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">顧客体験</label>
-                                <input type="range" min="1" max="100" value="70" class="slider" id="experience">
-                                <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                    <span>基本</span><span id="experienceValue">70</span><span>卓越</span>
-                                </div>
+                        <div class="slider-container">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-heart mr-2"></i>顧客体験
+                            </label>
+                            <input type="range" min="1" max="100" value="75" class="slider" id="experience">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>標準</span><span id="experienceValue" class="font-bold">75</span><span>感動</span>
                             </div>
+                        </div>
 
-                            <div class="slider-container">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">在庫効率</label>
-                                <input type="range" min="1" max="100" value="55" class="slider" id="inventory">
-                                <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                    <span>低効率</span><span id="inventoryValue">55</span><span>高効率</span>
-                                </div>
+                        <div class="slider-container">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-sync-alt mr-2"></i>在庫効率
+                            </label>
+                            <input type="range" min="1" max="100" value="60" class="slider" id="inventory">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>低効率</span><span id="inventoryValue" class="font-bold">60</span><span>高効率</span>
                             </div>
+                        </div>
 
-                            <div class="slider-container">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">オムニチャネル対応</label>
-                                <input type="range" min="1" max="100" value="65" class="slider" id="omnichannel">
-                                <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                    <span>未対応</span><span id="omnichannelValue">65</span><span>完全統合</span>
-                                </div>
+                        <div class="slider-container">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-network-wired mr-2"></i>オムニチャネル
+                            </label>
+                            <input type="range" min="1" max="100" value="55" class="slider" id="omnichannel">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>分離</span><span id="omnichannelValue" class="font-bold">55</span><span>統合</span>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Success Indicator -->
-                    <div class="bg-white rounded-lg p-6 card-shadow">
-                        <h3 class="text-lg font-bold mb-4 text-gray-800">
-                            <i class="fas fa-chart-pie mr-2"></i>事業成功確率
-                        </h3>
-                        <div class="flex items-center justify-center mb-4">
-                            <div class="w-24 h-24 success-meter flex items-center justify-center relative">
-                                <span class="text-2xl font-bold text-white z-10" id="successRate">72%</span>
-                            </div>
-                        </div>
-                        <div class="text-center">
-                            <span class="inline-block px-3 py-1 rounded-full text-sm font-medium" id="successLabel">良好</span>
+                <!-- Success Indicator -->
+                <div class="bg-white rounded-lg p-6 card-shadow">
+                    <h3 class="text-lg font-bold mb-4 text-gray-800">
+                        <i class="fas fa-chart-line mr-2 text-green-600"></i>事業成功確率
+                    </h3>
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="w-24 h-24 success-meter flex items-center justify-center relative">
+                            <span class="text-2xl font-bold text-white z-10" id="successRate">76%</span>
                         </div>
                     </div>
+                    <div class="text-center">
+                        <span class="inline-block px-3 py-1 rounded-full text-sm font-medium" id="successLabel">良好</span>
+                    </div>
+                </div>
 
-                    <!-- Scenario Management -->
-                    <div class="bg-white rounded-lg p-6 card-shadow">
-                        <h3 class="text-lg font-bold mb-4 text-gray-800">
-                            <i class="fas fa-save mr-2"></i>シナリオ管理
-                        </h3>
-                        <div class="space-y-2">
-                            <button class="w-full bg-blue-500 text-white px-4 py-3 rounded hover:bg-blue-600 transition text-sm" onclick="saveScenario()">
-                                <i class="fas fa-plus mr-2"></i>現在のシナリオを保存
-                            </button>
-                            <select class="w-full border rounded px-3 py-2 text-sm" id="scenarioSelect" onchange="loadScenario()">
-                                <option value="">保存済みシナリオを選択</option>
-                            </select>
-                            <button class="w-full bg-red-500 text-white px-4 py-3 rounded hover:bg-red-600 transition text-sm" onclick="clearScenarios()">
-                                <i class="fas fa-trash mr-2"></i>全シナリオクリア
-                            </button>
-                        </div>
+                <!-- Scenario Management -->
+                <div class="bg-white rounded-lg p-6 card-shadow">
+                    <h3 class="text-lg font-bold mb-4 text-gray-800">
+                        <i class="fas fa-save mr-2 text-purple-600"></i>シナリオ管理
+                    </h3>
+                    <div class="space-y-2">
+                        <button class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition text-sm" onclick="saveScenario()">
+                            <i class="fas fa-plus mr-2"></i>現在のシナリオを保存
+                        </button>
+                        <select class="w-full border rounded px-3 py-2 text-sm" id="scenarioSelect" onchange="loadScenario()">
+                            <option value="">保存済みシナリオを選択</option>
+                        </select>
+                        <button class="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-sm" onclick="clearScenarios()">
+                            <i class="fas fa-trash mr-2"></i>全シナリオクリア
+                        </button>
                     </div>
                 </div>
             </div>
 
             <!-- Visualization Panel -->
-            <div class="lg:col-span-8 mobile-full">
-                <div class="space-y-6">
-                    <!-- Balance Board -->
-                    <div class="bg-white rounded-lg p-6 card-shadow">
-                        <h2 class="text-xl font-bold mb-4 text-gray-800">
-                            <i class="fas fa-project-diagram mr-2"></i>戦略バランスボード
-                        </h2>
-                        <div class="chart-container">
-                            <canvas id="balanceChart"></canvas>
-                        </div>
+            <div class="lg:col-span-8 space-y-4 order-1 lg:order-2">
+                <!-- Balance Board -->
+                <div class="bg-white rounded-lg p-6 card-shadow">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800">
+                        <i class="fas fa-radar mr-2 text-indigo-600"></i>戦略バランスボード
+                    </h2>
+                    <div class="relative mobile-chart" style="height: 400px;">
+                        <canvas id="balanceChart"></canvas>
                     </div>
+                </div>
 
-                    <!-- Correlation Matrix -->
-                    <div class="bg-white rounded-lg p-6 card-shadow">
-                        <h2 class="text-xl font-bold mb-4 text-gray-800">
-                            <i class="fas fa-chart-line mr-2"></i>要素間相関分析
-                        </h2>
-                        <div class="correlation-container">
-                            <canvas id="correlationChart"></canvas>
-                        </div>
+                <!-- Correlation Matrix -->
+                <div class="bg-white rounded-lg p-6 card-shadow">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800">
+                        <i class="fas fa-chart-bar mr-2 text-orange-600"></i>要素間相関分析
+                    </h2>
+                    <div class="relative mobile-correlation-chart" style="height: 300px;">
+                        <canvas id="correlationChart"></canvas>
                     </div>
+                </div>
 
-                    <!-- Strategic Recommendations -->
-                    <div class="bg-white rounded-lg p-6 card-shadow">
-                        <h2 class="text-xl font-bold mb-4 text-gray-800">
-                            <i class="fas fa-lightbulb mr-2"></i>戦略提案
-                        </h2>
-                        <div id="recommendations" class="space-y-3">
-                            <!-- Dynamic recommendations will be inserted here -->
-                        </div>
+                <!-- Strategic Recommendations -->
+                <div class="bg-white rounded-lg p-6 card-shadow">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800">
+                        <i class="fas fa-lightbulb mr-2 text-yellow-600"></i>戦略提案
+                    </h2>
+                    <div id="recommendations" class="space-y-3">
+                        <!-- Dynamic recommendations will be inserted here -->
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Footer -->
-        <footer class="mt-12 text-center text-gray-600 text-sm">
-            <p>&copy; 2025 DEARS CONSULTING. All Rights Reserved.</p>
-        </footer>
     </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 text-gray-600 text-sm border-t border-gray-200 mt-8">
+        © 2025 DEARS CONSULTING. All Rights Reserved.
+    </footer>
 
     <script>
         // Global variables
@@ -220,15 +231,16 @@
                     labels: ['商品力', '立地・アクセス', '顧客体験', '在庫効率', 'オムニチャネル', '収益性'],
                     datasets: [{
                         label: '現在の戦略バランス',
-                        data: [75, 60, 70, 55, 65, 0],
-                        backgroundColor: 'rgba(79, 70, 229, 0.2)',
-                        borderColor: 'rgba(79, 70, 229, 1)',
-                        pointBackgroundColor: 'rgba(79, 70, 229, 1)',
+                        data: [70, 65, 75, 60, 55, 0],
+                        backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                        borderColor: 'rgba(99, 102, 241, 1)',
+                        pointBackgroundColor: 'rgba(99, 102, 241, 1)',
                         pointBorderColor: '#fff',
                         pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(79, 70, 229, 1)',
+                        pointHoverBorderColor: 'rgba(99, 102, 241, 1)',
                         pointRadius: 6,
-                        pointHoverRadius: 8
+                        pointHoverRadius: 8,
+                        borderWidth: 3
                     }]
                 },
                 options: {
@@ -236,15 +248,29 @@
                     maintainAspectRatio: false,
                     scales: {
                         r: {
-                            angleLines: { display: true },
+                            angleLines: { 
+                                display: true,
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: window.innerWidth < 768 ? 12 : 14
+                                }
+                            },
                             suggestedMin: 0,
                             suggestedMax: 100,
-                            grid: { color: 'rgba(0,0,0,0.1)' },
-                            pointLabels: { font: { size: 12 } }
+                            ticks: {
+                                display: false
+                            }
                         }
                     },
                     plugins: {
-                        legend: { display: false }
+                        legend: { 
+                            display: false
+                        }
                     }
                 }
             });
@@ -254,17 +280,17 @@
             correlationChart = new Chart(correlationCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['商品力→差別化', '立地→来店数', '顧客体験→リピート', '在庫効率→CF', 'オムニ→売上', '総合→収益性'],
+                    labels: ['商品力→差別化', '立地→来店数', '体験→リピート', '在庫→CF', 'オムニ→データ', '総合→収益'],
                     datasets: [{
                         label: '相関強度',
-                        data: [0.8, 0.9, 0.85, 0.7, 0.75, 0.8],
+                        data: [0.7, 0.65, 0.75, 0.6, 0.55, 0.66],
                         backgroundColor: [
-                            'rgba(239, 68, 68, 0.7)',
-                            'rgba(245, 158, 11, 0.7)',
-                            'rgba(16, 185, 129, 0.7)',
-                            'rgba(59, 130, 246, 0.7)',
-                            'rgba(139, 92, 246, 0.7)',
-                            'rgba(236, 72, 153, 0.7)'
+                            'rgba(239, 68, 68, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(139, 92, 246, 0.8)',
+                            'rgba(236, 72, 153, 0.8)'
                         ],
                         borderColor: [
                             'rgba(239, 68, 68, 1)',
@@ -274,7 +300,8 @@
                             'rgba(139, 92, 246, 1)',
                             'rgba(236, 72, 153, 1)'
                         ],
-                        borderWidth: 2
+                        borderWidth: 2,
+                        borderRadius: 4
                     }]
                 },
                 options: {
@@ -285,29 +312,41 @@
                             beginAtZero: true,
                             min: 0,
                             max: 1,
-                            ticks: { font: { size: 11 } }
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            }
                         },
                         x: {
-                            ticks: { font: { size: 10 } }
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: window.innerWidth < 768 ? 10 : 12
+                                }
+                            }
                         }
                     },
                     plugins: {
-                        legend: { display: false }
+                        legend: { 
+                            display: false 
+                        }
                     }
                 }
             });
         }
 
-        // Calculate profitability based on retail factors
+        // Calculate profitability based on all factors
         function calculateProfitability(product, location, experience, inventory, omnichannel) {
-            const productMargin = product * 0.3; // 商品力→利益率
-            const locationSales = location * 0.25; // 立地→売上
-            const experienceLoyalty = experience * 0.2; // 体験→顧客維持
-            const inventoryEfficiency = inventory * 0.15; // 在庫効率→キャッシュフロー
-            const omnichannelSynergy = omnichannel * 0.1; // オムニチャネル→相乗効果
+            // 小売・EC業界特有の計算ロジック
+            const productImpact = product * 0.25; // 商品力の収益への影響
+            const locationImpact = location * 0.2; // 立地・アクセスの影響
+            const experienceImpact = experience * 0.2; // 顧客体験の影響
+            const inventoryImpact = inventory * 0.15; // 在庫効率の影響
+            const omnichannelImpact = omnichannel * 0.2; // オムニチャネルの影響
             
             const profitability = Math.min(100, Math.max(0, 
-                productMargin + locationSales + experienceLoyalty + inventoryEfficiency + omnichannelSynergy
+                productImpact + locationImpact + experienceImpact + inventoryImpact + omnichannelImpact
             ));
             
             return Math.round(profitability);
@@ -332,22 +371,22 @@
             
             // Update balance chart
             balanceChart.data.datasets[0].data = [product, location, experience, inventory, omnichannel, profitability];
-            balanceChart.update();
+            balanceChart.update('none');
             
             // Update correlation data
             const correlations = [
-                product * 0.008, // Product power to differentiation
-                location * 0.009, // Location to foot traffic
-                experience * 0.0085, // Experience to repeat customers
-                inventory * 0.007, // Inventory efficiency to cash flow
-                omnichannel * 0.0075, // Omnichannel to sales
-                profitability * 0.008 // Overall to profitability
+                product * 0.01, // Product to Differentiation
+                location * 0.0065, // Location to Traffic
+                experience * 0.0075, // Experience to Repeat
+                inventory * 0.006, // Inventory to Cash Flow
+                omnichannel * 0.0055, // Omnichannel to Data
+                profitability * 0.0066 // Overall to Profitability
             ];
             correlationChart.data.datasets[0].data = correlations;
-            correlationChart.update();
+            correlationChart.update('none');
             
             // Update success rate
-            const successRate = Math.round((product + location + experience + inventory + omnichannel) / 5);
+            const successRate = Math.round((profitability + experience + product) / 3);
             document.getElementById('successRate').textContent = successRate + '%';
             
             const successLabel = document.getElementById('successLabel');
@@ -366,7 +405,7 @@
             updateRecommendations(product, location, experience, inventory, omnichannel, profitability);
         }
 
-        // Generate strategic recommendations for retail
+        // Generate strategic recommendations
         function updateRecommendations(product, location, experience, inventory, omnichannel, profitability) {
             const recommendations = [];
             
@@ -375,52 +414,52 @@
                     icon: 'fas fa-exclamation-triangle',
                     type: 'warning',
                     title: '収益性改善が急務',
-                    text: '商品力向上や在庫効率改善により、利益率の向上を図る必要があります。'
+                    text: '在庫効率の向上と顧客体験の質向上により、利益率改善を図りましょう。'
                 });
             }
             
-            if (product > 80 && location < 50) {
+            if (product > 80 && omnichannel < 50) {
                 recommendations.push({
-                    icon: 'fas fa-shopping-cart',
+                    icon: 'fas fa-network-wired',
                     type: 'info',
-                    title: 'オンライン重点戦略',
-                    text: '高い商品力を活かし、ECチャネルを強化することで立地の制約を克服できます。'
-                });
-            }
-            
-            if (experience > 75 && omnichannel < 60) {
-                recommendations.push({
-                    icon: 'fas fa-sync-alt',
-                    type: 'warning',
-                    title: 'オムニチャネル強化の機会',
-                    text: '優れた顧客体験をオンライン・オフライン統合により、さらに向上させましょう。'
+                    title: 'オムニチャネル強化推奨',
+                    text: '優れた商品力を活かすため、EC・SNS・実店舗の連携強化が効果的です。'
                 });
             }
             
             if (inventory < 50) {
                 recommendations.push({
-                    icon: 'fas fa-boxes',
+                    icon: 'fas fa-sync-alt',
                     type: 'warning',
-                    title: '在庫管理改善が必要',
-                    text: '在庫回転率の向上により、キャッシュフローと利益率を大幅に改善できます。'
+                    title: '在庫管理システム改善',
+                    text: 'AI需要予測導入により在庫回転率向上とキャッシュフロー改善を実現しましょう。'
                 });
             }
             
-            if (location > 80 && experience > 80) {
+            if (experience > 75 && location < 60) {
                 recommendations.push({
-                    icon: 'fas fa-star',
-                    type: 'success',
-                    title: '強固な競争優位性',
-                    text: '優れた立地と顧客体験により、持続可能な競争優位性を確保しています。'
+                    icon: 'fas fa-map-marker-alt',
+                    type: 'info',
+                    title: '立地・アクセス改善',
+                    text: '優れた顧客体験を活かすため、アクセス性向上やオンライン導線改善を検討しましょう。'
                 });
             }
             
-            if (omnichannel > 80) {
+            if (omnichannel > 70 && product < 60) {
                 recommendations.push({
-                    icon: 'fas fa-network-wired',
+                    icon: 'fas fa-box',
                     type: 'success',
-                    title: 'オムニチャネル活用成功',
-                    text: 'チャネル統合により、顧客データ活用と売上最大化を実現しています。'
+                    title: 'データ活用で商品力向上',
+                    text: 'オムニチャネルで得られた顧客データを商品開発・仕入れに活用しましょう。'
+                });
+            }
+            
+            if (location > 80 && experience < 50) {
+                recommendations.push({
+                    icon: 'fas fa-heart',
+                    type: 'warning',
+                    title: '顧客体験向上が必要',
+                    text: '良立地を活かすため、接客研修やUI/UX改善で顧客満足度向上を図りましょう。'
                 });
             }
             
@@ -431,9 +470,9 @@
                         rec.type === 'warning' ? 'text-yellow-600' : 'text-blue-600'} mt-1 mr-3 text-lg"></i>
                     <div>
                         <h4 class="font-medium ${rec.type === 'success' ? 'text-green-800' : 
-                            rec.type === 'warning' ? 'text-yellow-800' : 'text-blue-800'} mb-1">${rec.title}</h4>
+                            rec.type === 'warning' ? 'text-yellow-800' : 'text-blue-800'}">${rec.title}</h4>
                         <p class="text-sm ${rec.type === 'success' ? 'text-green-700' : 
-                            rec.type === 'warning' ? 'text-yellow-700' : 'text-blue-700'}">${rec.text}</p>
+                            rec.type === 'warning' ? 'text-yellow-700' : 'text-blue-700'} mt-1">${rec.text}</p>
                     </div>
                 </div>
             `).join('');
@@ -510,14 +549,24 @@
                 document.getElementById(id).addEventListener('input', updateVisualizations);
             });
         });
+
+        // Handle window resize for responsive charts
+        window.addEventListener('resize', function() {
+            if (balanceChart) {
+                balanceChart.resize();
+            }
+            if (correlationChart) {
+                correlationChart.resize();
+            }
+        });
     </script>
 </body>
 </html>
     <script id="html_badge_script1">
         window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
-            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDuRolC65tbeQNajJcQVgnN8BJIUJPFFDKWSouROzxJ5sgydn%2F8CuWF%2FL5%2FoE5odQa7QdjfOIJZo1siywO5e5Lrstje8pw2UugfPkt%2BlvG4DlWcTiKOaNP2qEmutxHNwSdYilBR2bGCyZj4VbcUSE%2BKPdk4VMV%2BOQD73wOhQ3%2BRfR77qI0h1Q5GHoFcHxU46Z6IXoXd%2Fectbv%2BK8OJmjNLJnSvxevAKAESI8b5h%2B3bUbQagtUWuy7EdvSBxlLc7pEOByxuGGvxx7ued%2BsRwI8M4HGbR2XkAL0oI05mHAGOmpVNneNzpKLOggVNYtURQSNPno%2FSRHcx4YHRN9Fmvh7XZkSeegAQ1YZeudVdFW3RVzuUR0SDJ7knW4zYF%2BOvjLVXxKoVd2bI%2BEEHn11L21Qqkwbt2Hki9IADydlp8aCUVpA5KEvByWt9YRQ5USA4d4KZrQL3rgBcYjytLMum%2FRCd89xLLUxQGygZqQ613xFFwzfeEXVgEIbzMpnvuCtGqrK5a%2BA4iCkKTZD2i2r6cKFLfk%3D";
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDgh0sVf7mEzzzWVCS%2B60rTnOHPzOY7%2BqEIlDrgQ%2BRi1WYc4YtY5s0jiRhXGdd4Wu7bOFfsJV7a7YSZ8Ov3KPtT9STlP1ITLq7ACAR4uyc6HXSnQnpeCpZxNCqYCUVn5bavCkdkRny%2FYIU7xajyt0ELC3vRlfVDmWKGv7gMlzSCzsO%2FuIb1cpFK5MIEI%2Bmu2cTwvOTpJgUNQaNXsvzjNPXH2XBiHK04%2F88QXB%2BpdiW08qDqTXVQ3GxVfimfTNXAeYuuQv02Db4GDoD42VUSyCVXszX2R1zLlphSVrHZbq7wMZChlWRBO9k2Q4%2FvJQQIrSPeAwb8wmEt6FwIMkpY8X9NXBFCuuCqF%2FgY2XRdsv5YzBLcLjnlX9WMcAw2YvqYf2dbPlCxWBx48%2B45YusJ0taTXlPETI25aewLJ2qQLdVgqcDbwc5Hkgc7RDYih8AafrTvj5X8quF3xN7HSenmD5TMfjbOLyaS3VmxRxvg5RmW5LrJXaf7dAEvDNVez8zNElHdOgwTht5jZ%2Bc1mtYytZJ38%3D";
         window.__genspark_locale = "ja-JP";
-        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDuRolC65tbeQNajJcQVgnN8BJIUJPFFDKWSouROzxJ5sgydn/8CuWF/L5/oE5odQa7QdjfOIJZo1siywO5e5Lrstje8pw2UugfPkt+lvG4DlWcTiKOaNP2qEmutxHNwSdYilBR2bGCyZj4VbcUSE+KPdk4VMV+OQD73wOhQ3+RfR77qI0h1Q5GHoFcHxU46Z6IXoXd/ectbv+K8OJmjNLJnSvxevAKAESI8b5h+3bUbQagtUWuy7EdvSBxlLc7pEOByxuGGvxx7ued+sRwI8M4HGbR2XkAL0oI05mHAGOmpVNneNzpKLOggVNYtURQSNPno/SRHcx4YHRN9Fmvh7XZkSeegAQ1YZeudVdFW3RVzuUR0SDJ7knW4zYF+OvjLVXxKoVd2bI+EEHn11L21Qqkwbt2Hki9IADydlp8aCUVpA5KEvByWt9YRQ5USA4d4KZrQL3rgBcYjytLMum/RCd89xLLUxQGygZqQ613xFFwzfeEXVgEIbzMpnvuCtGqrK5a+A4iCkKTZD2i2r6cKFLfk=";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDgh0sVf7mEzzzWVCS+60rTnOHPzOY7+qEIlDrgQ+Ri1WYc4YtY5s0jiRhXGdd4Wu7bOFfsJV7a7YSZ8Ov3KPtT9STlP1ITLq7ACAR4uyc6HXSnQnpeCpZxNCqYCUVn5bavCkdkRny/YIU7xajyt0ELC3vRlfVDmWKGv7gMlzSCzsO/uIb1cpFK5MIEI+mu2cTwvOTpJgUNQaNXsvzjNPXH2XBiHK04/88QXB+pdiW08qDqTXVQ3GxVfimfTNXAeYuuQv02Db4GDoD42VUSyCVXszX2R1zLlphSVrHZbq7wMZChlWRBO9k2Q4/vJQQIrSPeAwb8wmEt6FwIMkpY8X9NXBFCuuCqF/gY2XRdsv5YzBLcLjnlX9WMcAw2YvqYf2dbPlCxWBx48+45YusJ0taTXlPETI25aewLJ2qQLdVgqcDbwc5Hkgc7RDYih8AafrTvj5X8quF3xN7HSenmD5TMfjbOLyaS3VmxRxvg5RmW5LrJXaf7dAEvDNVez8zNElHdOgwTht5jZ+c1mtYytZJ38=";
     </script>
     
     <script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"></script>
