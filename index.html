@@ -3,168 +3,624 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小売・EC業界 戦略バランスボード | DEARS CONSULTING</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <title>戦略バランスボード - 小売・EC業界版 | DEARS CONSULTING</title>
+    <meta name="description" content="小売・EC業界に特化した戦略思考支援ツール。顧客体験、商品力、デジタル戦略の動的相関から収益達成可能性を可視化します。">
+    <meta name="keywords" content="小売業界,EC,戦略分析,収益予測,顧客体験,オムニチャネル,デジタルマーケティング">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
+        * {
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+        
         .gradient-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-        .card-shadow {
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
         }
+        
         .slider-container {
             position: relative;
+            margin: 1rem 0;
         }
+        
         .slider {
             -webkit-appearance: none;
             width: 100%;
-            height: 6px;
-            border-radius: 3px;
-            background: #ddd;
+            height: 8px;
+            border-radius: 5px;
+            background: #e2e8f0;
             outline: none;
+            transition: all 0.3s ease;
         }
+        
         .slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
-            background: #4f46e5;
+            background: #667eea;
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
         }
-        .success-meter {
-            background: conic-gradient(from 0deg, #ef4444 0deg, #f59e0b 120deg, #10b981 240deg, #10b981 360deg);
+        
+        .slider::-webkit-slider-thumb:hover {
+            background: #5a67d8;
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
         }
+        
+        .metric-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid #667eea;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 600px;
+            width: 100%;
+        }
+        
+        .insight-card {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-left: 4px solid #38b2ac;
+            transition: all 0.3s ease;
+        }
+        
+        .insight-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 20px rgba(56, 178, 172, 0.2);
+        }
+        
+        .score-display {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #667eea;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .category-header {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem 0.5rem 0 0;
+            font-weight: 600;
+        }
+        
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        
         @media (max-width: 768px) {
-            .mobile-stack {
-                display: block !important;
+            .score-display {
+                font-size: 2rem;
             }
-            .mobile-full {
-                width: 100% !important;
-                margin-bottom: 1rem;
+            
+            .metric-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-container {
+                height: 400px;
             }
         }
+        
+        .strategy-weight {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+        
+        .correlation-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: 0.5rem;
+        }
+        
+        .correlation-high { background-color: #48bb78; }
+        .correlation-medium { background-color: #ed8936; }
+        .correlation-low { background-color: #f56565; }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
-    <div class="container mx-auto px-4 py-6">
-        <!-- Header -->
-        <div class="gradient-bg text-white rounded-lg p-6 mb-6 card-shadow">
-            <h1 class="text-3xl font-bold mb-2"><i class="fas fa-chess-board mr-3"></i>戦略バランスボード</h1>
-            <p class="text-lg opacity-90">小売・EC業界の動的相関図 - オムニチャネル時代の戦略最適化フレームワーク</p>
-            <p class="text-sm opacity-75 mt-2">Developed by DEARS CONSULTING</p>
+    <!-- Header -->
+    <header class="gradient-bg text-white py-6 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold mb-2">
+                        <i class="fas fa-shopping-cart mr-3"></i>戦略バランスボード
+                    </h1>
+                    <p class="text-lg opacity-90">小売・EC業界版 - 顧客体験と収益最適化の戦略分析</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-sm opacity-80">Powered by</div>
+                    <div class="text-lg font-semibold">DEARS CONSULTING</div>
+                </div>
+            </div>
         </div>
+    </header>
 
-        <!-- Main Content -->
-        <div class="grid grid-cols-12 gap-6 mobile-stack">
-            <!-- Control Panel -->
-            <div class="col-span-12 lg:col-span-4 mobile-full">
-                <div class="space-y-4">
-                    <div class="bg-white rounded-lg p-6 card-shadow">
-                        <h2 class="text-xl font-bold mb-4 text-gray-800"><i class="fas fa-sliders-h mr-2"></i>要素調整パネル</h2>
-                        
-                        <div class="space-y-6">
-                            <div class="slider-container">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">商品力</label>
-                                <input type="range" min="1" max="100" value="65" class="slider" id="productPower">
-                                <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                    <span>基本</span><span id="productPowerValue">65</span><span>独自性高</span>
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Left Column - Strategy Elements -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Industry Overview -->
+                <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                        <i class="fas fa-store text-purple-600 mr-2"></i>小売・EC業界 戦略要素分析
+                    </h2>
+                    <p class="text-gray-600 mb-4">
+                        デジタル変革期における小売・EC事業の収益達成可能性を6つの戦略要素で分析します。
+                        顧客体験の向上、オムニチャネル戦略、データドリブン経営の相関関係を可視化し、
+                        持続的な競争優位性構築を支援します。
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">オムニチャネル</span>
+                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">CX最適化</span>
+                        <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">データ活用</span>
+                        <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm">在庫効率</span>
+                    </div>
+                </div>
+
+                <!-- Strategic Elements -->
+                <div class="space-y-6">
+                    <!-- Trend Adaptation -->
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                        <div class="category-header">
+                            <i class="fas fa-chart-line mr-2"></i>トレンド適合性
+                            <span class="strategy-weight">重み: 20%</span>
+                        </div>
+                        <div class="p-6">
+                            <div class="metric-grid">
+                                <!-- デジタル変革対応 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">デジタル変革対応</label>
+                                        <span id="digital-transformation-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="digital-transformation" name="digital-transformation">
+                                    <div class="text-sm text-gray-500 mt-1">DX戦略・AI活用・自動化推進</div>
+                                    <div class="correlation-indicator correlation-high" title="収益への影響度: 高"></div>
                                 </div>
-                            </div>
 
-                            <div class="slider-container">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">立地・アクセス</label>
-                                <input type="range" min="1" max="100" value="60" class="slider" id="locationAccess">
-                                <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                    <span>不便</span><span id="locationAccessValue">60</span><span>最適立地</span>
+                                <!-- 消費者行動変化対応 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">消費者行動変化対応</label>
+                                        <span id="consumer-behavior-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="consumer-behavior" name="consumer-behavior">
+                                    <div class="text-sm text-gray-500 mt-1">購買パターン・価値観変化への適応</div>
+                                    <div class="correlation-indicator correlation-high" title="収益への影響度: 高"></div>
                                 </div>
-                            </div>
 
-                            <div class="slider-container">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">顧客体験</label>
-                                <input type="range" min="1" max="100" value="70" class="slider" id="customerExperience">
-                                <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                    <span>基本</span><span id="customerExperienceValue">70</span><span>最高級</span>
+                                <!-- サステナビリティ対応 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">サステナビリティ対応</label>
+                                        <span id="sustainability-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="sustainability" name="sustainability">
+                                    <div class="text-sm text-gray-500 mt-1">環境配慮・エシカル消費対応</div>
+                                    <div class="correlation-indicator correlation-medium" title="収益への影響度: 中"></div>
                                 </div>
-                            </div>
 
-                            <div class="slider-container">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">在庫効率</label>
-                                <input type="range" min="1" max="100" value="55" class="slider" id="inventoryEfficiency">
-                                <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                    <span>過剰在庫</span><span id="inventoryEfficiencyValue">55</span><span>最適化</span>
-                                </div>
-                            </div>
-
-                            <div class="slider-container">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">オムニチャネル対応</label>
-                                <input type="range" min="1" max="100" value="50" class="slider" id="omnichannel">
-                                <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                    <span>単一チャネル</span><span id="omnichannelValue">50</span><span>完全統合</span>
+                                <!-- 新規事業領域展開 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">新規事業領域展開</label>
+                                        <span id="new-business-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="new-business" name="new-business">
+                                    <div class="text-sm text-gray-500 mt-1">新カテゴリー・新市場開拓</div>
+                                    <div class="correlation-indicator correlation-medium" title="収益への影響度: 中"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Success Indicator -->
-                    <div class="bg-white rounded-lg p-6 card-shadow">
-                        <h3 class="text-lg font-bold mb-4 text-gray-800"><i class="fas fa-target mr-2"></i>事業成功確率</h3>
-                        <div class="flex items-center justify-center mb-4">
-                            <div class="w-24 h-24 success-meter flex items-center justify-center relative">
-                                <span class="text-2xl font-bold text-white z-10" id="successRate">78%</span>
-                            </div>
+                    <!-- Brand Power -->
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                        <div class="category-header">
+                            <i class="fas fa-crown mr-2"></i>ブランド力
+                            <span class="strategy-weight">重み: 25%</span>
                         </div>
-                        <div class="text-center">
-                            <span class="inline-block px-3 py-1 rounded-full text-sm font-medium" id="successLabel">良好</span>
+                        <div class="p-6">
+                            <div class="metric-grid">
+                                <!-- 市場認知度・差別化 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">市場認知度・差別化</label>
+                                        <span id="market-recognition-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="market-recognition" name="market-recognition">
+                                    <div class="text-sm text-gray-500 mt-1">ブランド知名度・独自性・話題性</div>
+                                    <div class="correlation-indicator correlation-high" title="収益への影響度: 高"></div>
+                                </div>
+
+                                <!-- 顧客ロイヤルティ -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">顧客ロイヤルティ</label>
+                                        <span id="customer-loyalty-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="customer-loyalty" name="customer-loyalty">
+                                    <div class="text-sm text-gray-500 mt-1">リピート率・NPS・エンゲージメント</div>
+                                    <div class="correlation-indicator correlation-high" title="収益への影響度: 高"></div>
+                                </div>
+
+                                <!-- ブランド信頼性 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">ブランド信頼性</label>
+                                        <span id="brand-trust-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="brand-trust" name="brand-trust">
+                                    <div class="text-sm text-gray-500 mt-1">品質保証・アフターサービス・評判</div>
+                                    <div class="correlation-indicator correlation-high" title="収益への影響度: 高"></div>
+                                </div>
+
+                                <!-- SNS・口コミ影響力 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">SNS・口コミ影響力</label>
+                                        <span id="social-influence-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="social-influence" name="social-influence">
+                                    <div class="text-sm text-gray-500 mt-1">ソーシャルメディア・UGC・インフルエンサー</div>
+                                    <div class="correlation-indicator correlation-medium" title="収益への影響度: 中"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Scenario Management -->
-                    <div class="bg-white rounded-lg p-6 card-shadow">
-                        <h3 class="text-lg font-bold mb-4 text-gray-800"><i class="fas fa-save mr-2"></i>シナリオ管理</h3>
-                        <div class="space-y-2">
-                            <button class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" onclick="saveScenario()">
-                                <i class="fas fa-plus mr-2"></i>現在のシナリオを保存
-                            </button>
-                            <select class="w-full border rounded px-3 py-2" id="scenarioSelect" onchange="loadScenario()">
-                                <option value="">保存済みシナリオを選択</option>
-                            </select>
-                            <button class="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition" onclick="clearScenarios()">
-                                <i class="fas fa-trash mr-2"></i>全シナリオクリア
-                            </button>
+                    <!-- Product/Service Power -->
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                        <div class="category-header">
+                            <i class="fas fa-box-open mr-2"></i>商品・サービス力
+                            <span class="strategy-weight">重み: 25%</span>
+                        </div>
+                        <div class="p-6">
+                            <div class="metric-grid">
+                                <!-- 商品開発・企画力 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">商品開発・企画力</label>
+                                        <span id="product-development-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="product-development" name="product-development">
+                                    <div class="text-sm text-gray-500 mt-1">新商品開発・トレンド先取り・イノベーション</div>
+                                    <div class="correlation-indicator correlation-high" title="収益への影響度: 高"></div>
+                                </div>
+
+                                <!-- 品質・機能性 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">品質・機能性</label>
+                                        <span id="quality-function-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="quality-function" name="quality-function">
+                                    <div class="text-sm text-gray-500 mt-1">商品品質・機能性・耐久性・安全性</div>
+                                    <div class="correlation-indicator correlation-high" title="収益への影響度: 高"></div>
+                                </div>
+
+                                <!-- 商品ラインナップ充実度 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">商品ラインナップ充実度</label>
+                                        <span id="product-lineup-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="product-lineup" name="product-lineup">
+                                    <div class="text-sm text-gray-500 mt-1">品揃え・価格帯展開・セグメント対応</div>
+                                    <div class="correlation-indicator correlation-medium" title="収益への影響度: 中"></div>
+                                </div>
+
+                                <!-- 顧客ニーズ適合性 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">顧客ニーズ適合性</label>
+                                        <span id="customer-needs-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="customer-needs" name="customer-needs">
+                                    <div class="text-sm text-gray-500 mt-1">ニーズ把握・カスタマイゼーション・解決力</div>
+                                    <div class="correlation-indicator correlation-high" title="収益への影響度: 高"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Business Environment -->
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                        <div class="category-header">
+                            <i class="fas fa-building mr-2"></i>経営環境
+                            <span class="strategy-weight">重み: 15%</span>
+                        </div>
+                        <div class="p-6">
+                            <div class="metric-grid">
+                                <!-- オムニチャネル戦略 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">オムニチャネル戦略</label>
+                                        <span id="omnichannel-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="omnichannel" name="omnichannel">
+                                    <div class="text-sm text-gray-500 mt-1">店舗・EC・アプリ連携・統一CX</div>
+                                    <div class="correlation-indicator correlation-high" title="収益への影響度: 高"></div>
+                                </div>
+
+                                <!-- デジタルマーケティング力 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">デジタルマーケティング力</label>
+                                        <span id="digital-marketing-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="digital-marketing" name="digital-marketing">
+                                    <div class="text-sm text-gray-500 mt-1">SEO・SNS・広告・パーソナライゼーション</div>
+                                    <div class="correlation-indicator correlation-high" title="収益への影響度: 高"></div>
+                                </div>
+
+                                <!-- データ活用力 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">データ活用力</label>
+                                        <span id="data-utilization-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="data-utilization" name="data-utilization">
+                                    <div class="text-sm text-gray-500 mt-1">顧客分析・予測・意思決定支援</div>
+                                    <div class="correlation-indicator correlation-medium" title="収益への影響度: 中"></div>
+                                </div>
+
+                                <!-- サプライチェーン効率 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">サプライチェーン効率</label>
+                                        <span id="supply-chain-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="supply-chain" name="supply-chain">
+                                    <div class="text-sm text-gray-500 mt-1">調達・物流・配送・パートナー連携</div>
+                                    <div class="correlation-indicator correlation-medium" title="収益への影響度: 中"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pricing Strategy -->
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                        <div class="category-header">
+                            <i class="fas fa-tags mr-2"></i>価格戦略
+                            <span class="strategy-weight">重み: 10%</span>
+                        </div>
+                        <div class="p-6">
+                            <div class="metric-grid">
+                                <!-- 価格競争力 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">価格競争力</label>
+                                        <span id="price-competitiveness-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="price-competitiveness" name="price-competitiveness">
+                                    <div class="text-sm text-gray-500 mt-1">市場価格・競合比較・コスパ</div>
+                                    <div class="correlation-indicator correlation-high" title="収益への影響度: 高"></div>
+                                </div>
+
+                                <!-- 価格戦略柔軟性 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">価格戦略柔軟性</label>
+                                        <span id="pricing-flexibility-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="pricing-flexibility" name="pricing-flexibility">
+                                    <div class="text-sm text-gray-500 mt-1">ダイナミック価格・セール・プロモーション</div>
+                                    <div class="correlation-indicator correlation-medium" title="収益への影響度: 中"></div>
+                                </div>
+
+                                <!-- 価値提案との整合性 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">価値提案との整合性</label>
+                                        <span id="value-alignment-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="value-alignment" name="value-alignment">
+                                    <div class="text-sm text-gray-500 mt-1">品質・価値・価格バランス</div>
+                                    <div class="correlation-indicator correlation-medium" title="収益への影響度: 中"></div>
+                                </div>
+
+                                <!-- 収益最適化 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">収益最適化</label>
+                                        <span id="revenue-optimization-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="revenue-optimization" name="revenue-optimization">
+                                    <div class="text-sm text-gray-500 mt-1">粗利率・回転率・LTV最大化</div>
+                                    <div class="correlation-indicator correlation-high" title="収益への影響度: 高"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cost Efficiency -->
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                        <div class="category-header">
+                            <i class="fas fa-chart-pie mr-2"></i>コスト効率
+                            <span class="strategy-weight">重み: 5%</span>
+                        </div>
+                        <div class="p-6">
+                            <div class="metric-grid">
+                                <!-- 調達・仕入効率 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">調達・仕入効率</label>
+                                        <span id="procurement-efficiency-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="procurement-efficiency" name="procurement-efficiency">
+                                    <div class="text-sm text-gray-500 mt-1">仕入単価・交渉力・品質管理</div>
+                                    <div class="correlation-indicator correlation-high" title="収益への影響度: 高"></div>
+                                </div>
+
+                                <!-- 在庫効率 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">在庫効率</label>
+                                        <span id="inventory-efficiency-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="inventory-efficiency" name="inventory-efficiency">
+                                    <div class="text-sm text-gray-500 mt-1">在庫回転率・廃棄ロス・適正在庫</div>
+                                    <div class="correlation-indicator correlation-high" title="収益への影響度: 高"></div>
+                                </div>
+
+                                <!-- オペレーション効率 -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">オペレーション効率</label>
+                                        <span id="operation-efficiency-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="operation-efficiency" name="operation-efficiency">
+                                    <div class="text-sm text-gray-500 mt-1">人件費・店舗効率・自動化</div>
+                                    <div class="correlation-indicator correlation-medium" title="収益への影響度: 中"></div>
+                                </div>
+
+                                <!-- マーケティングROI -->
+                                <div class="metric-card bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="font-medium text-gray-700">マーケティングROI</label>
+                                        <span id="marketing-roi-value" class="text-blue-600 font-bold">5</span>
+                                    </div>
+                                    <input type="range" min="1" max="10" value="5" class="slider" 
+                                           id="marketing-roi" name="marketing-roi">
+                                    <div class="text-sm text-gray-500 mt-1">広告効率・CPA・ROAS</div>
+                                    <div class="correlation-indicator correlation-medium" title="収益への影響度: 中"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Visualization Panel -->
-            <div class="col-span-12 lg:col-span-8 mobile-full">
-                <div class="space-y-4">
-                    <!-- Balance Board -->
-                    <div class="bg-white rounded-lg p-6 card-shadow">
-                        <h2 class="text-xl font-bold mb-4 text-gray-800"><i class="fas fa-project-diagram mr-2"></i>小売・EC戦略バランス</h2>
-                        <div class="relative" style="height: 400px;">
-                            <canvas id="balanceChart"></canvas>
-                        </div>
+            <!-- Right Column - Results -->
+            <div class="space-y-6">
+                <!-- Score Display -->
+                <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">
+                        <i class="fas fa-bullseye text-green-500 mr-2"></i>収益達成可能性
+                    </h3>
+                    <div class="score-display pulse" id="total-score">50</div>
+                    <div class="text-gray-600 mb-4">/ 100 点</div>
+                    <div class="w-full bg-gray-200 rounded-full h-4 mb-4">
+                        <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-4 rounded-full transition-all duration-500" 
+                             id="score-bar" style="width: 50%"></div>
                     </div>
+                    <div id="score-status" class="text-lg font-semibold text-orange-600">要改善</div>
+                </div>
 
-                    <!-- Correlation Matrix -->
-                    <div class="bg-white rounded-lg p-6 card-shadow">
-                        <h2 class="text-xl font-bold mb-4 text-gray-800"><i class="fas fa-chart-line mr-2"></i>要素間相関分析</h2>
-                        <div class="relative" style="height: 350px;">
-                            <canvas id="correlationChart"></canvas>
-                        </div>
+                <!-- Chart -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">
+                        <i class="fas fa-chart-pie text-blue-500 mr-2"></i>戦略バランス分析
+                    </h3>
+                    <div class="chart-container">
+                        <canvas id="strategy-chart"></canvas>
                     </div>
+                </div>
 
-                    <!-- Strategic Recommendations -->
-                    <div class="bg-white rounded-lg p-6 card-shadow">
-                        <h2 class="text-xl font-bold mb-4 text-gray-800"><i class="fas fa-lightbulb mr-2"></i>小売・EC戦略提案</h2>
-                        <div id="recommendations" class="space-y-3">
-                            <!-- Dynamic recommendations will be inserted here -->
+                <!-- Strategic Insights -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">
+                        <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>戦略的インサイト
+                    </h3>
+                    <div id="insights-container" class="space-y-4">
+                        <div class="insight-card p-4 rounded-lg">
+                            <div class="font-semibold text-green-700 mb-2">
+                                <i class="fas fa-arrow-up mr-1"></i>強み領域
+                            </div>
+                            <div id="strengths" class="text-gray-700">分析中...</div>
+                        </div>
+                        <div class="insight-card p-4 rounded-lg">
+                            <div class="font-semibold text-red-700 mb-2">
+                                <i class="fas fa-arrow-down mr-1"></i>改善領域
+                            </div>
+                            <div id="weaknesses" class="text-gray-700">分析中...</div>
+                        </div>
+                        <div class="insight-card p-4 rounded-lg">
+                            <div class="font-semibold text-blue-700 mb-2">
+                                <i class="fas fa-rocket mr-1"></i>推奨アクション
+                            </div>
+                            <div id="recommendations" class="text-gray-700">分析中...</div>
                         </div>
                     </div>
                 </div>
@@ -173,316 +629,342 @@
     </div>
 
     <!-- Footer -->
-    <footer class="text-center py-6 text-gray-600 text-sm">
-        <p>&copy; 2025 DEARS CONSULTING. All Rights Reserved.</p>
-        <p class="mt-1">小売・EC業界特化戦略分析ツール</p>
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">DEARS CONSULTING</h4>
+                    <p class="text-gray-300">
+                        経営コンサルティングと戦略的思考支援ツールの開発により、
+                        企業の持続的成長を支援しています。
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">サービス</h4>
+                    <ul class="text-gray-300 space-y-2">
+                        <li>事業戦略コンサルティング</li>
+                        <li>ブランディング支援</li>
+                        <li>デジタル変革支援</li>
+                        <li>パーソナライゼーション戦略</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">お問い合わせ</h4>
+                    <div class="text-gray-300">
+                        <p>ホームページ: <a href="https://dearsconsulting.com" class="text-blue-400 hover:underline">dearsconsulting.com</a></p>
+                        <p>メール: staff@dearsconsulting.com</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-600 mt-8 pt-4 text-center text-gray-400">
+                <p>&copy; 2025 DEARS CONSULTING - Strategic Balance Board. All Rights Reserved.</p>
+            </div>
+        </div>
     </footer>
 
     <script>
-        // Global variables
-        let balanceChart, correlationChart;
-        let scenarios = JSON.parse(localStorage.getItem('retailECScenarios')) || [];
+        // Strategic weights for retail/EC industry
+        const WEIGHTS = {
+            trend: 0.20,      // デジタル変革が重要
+            brand: 0.25,      // ブランド力が重要
+            product: 0.25,    // 商品力が重要
+            environment: 0.15, // オムニチャネルが重要
+            pricing: 0.10,    // 価格戦略
+            cost: 0.05        // コスト効率
+        };
 
-        // Initialize charts
-        function initCharts() {
-            // Balance Chart (Radar)
-            const balanceCtx = document.getElementById('balanceChart').getContext('2d');
-            balanceChart = new Chart(balanceCtx, {
-                type: 'radar',
-                data: {
-                    labels: ['商品力', '立地・アクセス', '顧客体験', '在庫効率', 'オムニチャネル', '収益性'],
-                    datasets: [{
-                        label: '現在の戦略バランス',
-                        data: [65, 60, 70, 55, 50, 0],
-                        backgroundColor: 'rgba(79, 70, 229, 0.2)',
-                        borderColor: 'rgba(79, 70, 229, 1)',
-                        pointBackgroundColor: 'rgba(79, 70, 229, 1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(79, 70, 229, 1)'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        r: {
-                            angleLines: { display: true },
-                            suggestedMin: 0,
-                            suggestedMax: 100
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false }
-                    }
+        // Chart instance
+        let strategyChart;
+
+        // Initialize the application
+        function init() {
+            setupSliders();
+            createChart();
+            updateAnalysis();
+        }
+
+        // Setup all sliders with event listeners
+        function setupSliders() {
+            const sliders = document.querySelectorAll('.slider');
+            sliders.forEach(slider => {
+                // Update display value
+                const valueSpan = document.getElementById(slider.id + '-value');
+                if (valueSpan) {
+                    valueSpan.textContent = slider.value;
                 }
-            });
 
-            // Correlation Chart (Bar)
-            const correlationCtx = document.getElementById('correlationChart').getContext('2d');
-            correlationChart = new Chart(correlationCtx, {
-                type: 'bar',
+                // Add event listener
+                slider.addEventListener('input', function() {
+                    if (valueSpan) {
+                        valueSpan.textContent = this.value;
+                    }
+                    updateAnalysis();
+                });
+            });
+        }
+
+        // Create the strategy chart
+        function createChart() {
+            const ctx = document.getElementById('strategy-chart').getContext('2d');
+            
+            strategyChart = new Chart(ctx, {
+                type: 'doughnut',
                 data: {
-                    labels: ['商品力→差別化', '立地→来店数', '顧客体験→リピート', '在庫→キャッシュフロー', 'オムニ→データ活用', '総合→収益性'],
+                    labels: [
+                        'トレンド適合性',
+                        'ブランド力', 
+                        '商品・サービス力',
+                        '経営環境',
+                        '価格戦略',
+                        'コスト効率'
+                    ],
                     datasets: [{
-                        label: '相関強度',
-                        data: [0.8, 0.7, 0.75, 0.6, 0.65, 0.78],
+                        data: [50, 50, 50, 50, 50, 50],
                         backgroundColor: [
-                            'rgba(239, 68, 68, 0.7)',
-                            'rgba(245, 158, 11, 0.7)',
-                            'rgba(16, 185, 129, 0.7)',
-                            'rgba(59, 130, 246, 0.7)',
-                            'rgba(139, 92, 246, 0.7)',
-                            'rgba(236, 72, 153, 0.7)'
+                            '#FF6B6B', // Red
+                            '#4ECDC4', // Teal
+                            '#45B7D1', // Blue
+                            '#96CEB4', // Green
+                            '#FFEAA7', // Yellow
+                            '#DDA0DD'  // Plum
                         ],
-                        borderColor: [
-                            'rgba(239, 68, 68, 1)',
-                            'rgba(245, 158, 11, 1)',
-                            'rgba(16, 185, 129, 1)',
-                            'rgba(59, 130, 246, 1)',
-                            'rgba(139, 92, 246, 1)',
-                            'rgba(236, 72, 153, 1)'
-                        ],
-                        borderWidth: 1
+                        borderWidth: 3,
+                        borderColor: '#ffffff'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            min: 0,
-                            max: 1
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                font: {
+                                    size: 12,
+                                    family: 'Noto Sans JP'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed;
+                                    const weight = Object.values(WEIGHTS)[context.dataIndex] * 100;
+                                    return `${label}: ${value}点 (重み${weight}%)`;
+                                }
+                            }
                         }
                     },
-                    plugins: {
-                        legend: { display: false }
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true,
+                        duration: 1000
                     }
                 }
             });
         }
 
-        // Calculate profitability based on retail/EC specific factors
-        function calculateProfitability(productPower, locationAccess, customerExperience, inventoryEfficiency, omnichannel) {
-            // Retail/EC specific calculation formula
-            const profitability = Math.min(100, Math.max(0, 
-                (productPower * 0.25 + 
-                 locationAccess * 0.20 + 
-                 customerExperience * 0.25 + 
-                 inventoryEfficiency * 0.15 + 
-                 omnichannel * 0.15)
-            ));
+        // Update analysis based on current slider values
+        function updateAnalysis() {
+            const scores = calculateScores();
+            const totalScore = calculateTotalScore(scores);
             
-            return Math.round(profitability);
+            updateScoreDisplay(totalScore);
+            updateChart(scores);
+            updateInsights(scores, totalScore);
         }
 
-        // Update all visualizations
-        function updateVisualizations() {
-            const productPower = parseInt(document.getElementById('productPower').value);
-            const locationAccess = parseInt(document.getElementById('locationAccess').value);
-            const customerExperience = parseInt(document.getElementById('customerExperience').value);
-            const inventoryEfficiency = parseInt(document.getElementById('inventoryEfficiency').value);
-            const omnichannel = parseInt(document.getElementById('omnichannel').value);
-            
-            const profitability = calculateProfitability(productPower, locationAccess, customerExperience, inventoryEfficiency, omnichannel);
-            
-            // Update value displays
-            document.getElementById('productPowerValue').textContent = productPower;
-            document.getElementById('locationAccessValue').textContent = locationAccess;
-            document.getElementById('customerExperienceValue').textContent = customerExperience;
-            document.getElementById('inventoryEfficiencyValue').textContent = inventoryEfficiency;
-            document.getElementById('omnichannelValue').textContent = omnichannel;
-            
-            // Update balance chart
-            balanceChart.data.datasets[0].data = [productPower, locationAccess, customerExperience, inventoryEfficiency, omnichannel, profitability];
-            balanceChart.update();
-            
-            // Update correlation data with retail/EC specific correlations
-            const correlations = [
-                productPower * 0.008, // Product Power to Differentiation
-                locationAccess * 0.007, // Location to Store Visits
-                customerExperience * 0.0075, // Customer Experience to Repeat Rate
-                inventoryEfficiency * 0.006, // Inventory to Cash Flow
-                omnichannel * 0.0065, // Omnichannel to Data Utilization
-                profitability * 0.0078 // Overall to Profitability
-            ];
-            correlationChart.data.datasets[0].data = correlations;
-            correlationChart.update();
-            
-            // Update success rate
-            const successRate = Math.round((profitability + customerExperience + productPower) / 3);
-            document.getElementById('successRate').textContent = successRate + '%';
-            
-            const successLabel = document.getElementById('successLabel');
-            if (successRate >= 80) {
-                successLabel.textContent = '優秀';
-                successLabel.className = 'inline-block px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800';
-            } else if (successRate >= 60) {
-                successLabel.textContent = '良好';
-                successLabel.className = 'inline-block px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800';
-            } else {
-                successLabel.textContent = '要改善';
-                successLabel.className = 'inline-block px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800';
-            }
-            
-            // Update recommendations
-            updateRecommendations(productPower, locationAccess, customerExperience, inventoryEfficiency, omnichannel, profitability);
-        }
-
-        // Generate retail/EC specific strategic recommendations
-        function updateRecommendations(productPower, locationAccess, customerExperience, inventoryEfficiency, omnichannel, profitability) {
-            const recommendations = [];
-            
-            if (profitability < 50) {
-                recommendations.push({
-                    icon: 'fas fa-exclamation-triangle',
-                    type: 'warning',
-                    title: '収益性改善が急務',
-                    text: '商品力向上または在庫効率の改善によるキャッシュフロー最適化が必要です。'
-                });
-            }
-            
-            if (productPower > 80 && locationAccess < 40) {
-                recommendations.push({
-                    icon: 'fas fa-store',
-                    type: 'info',
-                    title: '高品質商品×ニッチ立地戦略',
-                    text: '商品力を活かしたオンライン重視、または特定立地での高収益モデルを検討してください。'
-                });
-            }
-            
-            if (inventoryEfficiency < 50) {
-                recommendations.push({
-                    icon: 'fas fa-boxes',
-                    type: 'warning',
-                    title: '在庫効率改善',
-                    text: 'AI需要予測システム導入で在庫回転率を向上させ、キャッシュフローを改善しましょう。'
-                });
-            }
-            
-            if (omnichannel > 70 && customerExperience > 70) {
-                recommendations.push({
-                    icon: 'fas fa-trophy',
-                    type: 'success',
-                    title: 'オムニチャネル×顧客体験の優位性',
-                    text: 'データ統合によるパーソナライズが強力な競争優位性を生み出しています。'
-                });
-            }
-            
-            if (customerExperience < 50) {
-                recommendations.push({
-                    icon: 'fas fa-heart',
-                    type: 'warning',
-                    title: '顧客体験向上が重要',
-                    text: '接客品質とUI/UX改善により、リピート率向上とLTV最大化を図ってください。'
-                });
-            }
-            
-            if (locationAccess > 80 && omnichannel < 40) {
-                recommendations.push({
-                    icon: 'fas fa-map-marker-alt',
-                    type: 'info',
-                    title: '好立地×デジタル融合',
-                    text: '優れた立地条件をオムニチャネル戦略で活かし、相乗効果を創出しましょう。'
-                });
-            }
-            
-            const recommendationsHtml = recommendations.map(rec => `
-                <div class="flex items-start p-3 rounded-lg ${rec.type === 'success' ? 'bg-green-50 border-l-4 border-green-400' : 
-                    rec.type === 'warning' ? 'bg-yellow-50 border-l-4 border-yellow-400' : 'bg-blue-50 border-l-4 border-blue-400'}">
-                    <i class="${rec.icon} ${rec.type === 'success' ? 'text-green-600' : 
-                        rec.type === 'warning' ? 'text-yellow-600' : 'text-blue-600'} mt-1 mr-3"></i>
-                    <div>
-                        <h4 class="font-medium ${rec.type === 'success' ? 'text-green-800' : 
-                            rec.type === 'warning' ? 'text-yellow-800' : 'text-blue-800'}">${rec.title}</h4>
-                        <p class="text-sm ${rec.type === 'success' ? 'text-green-700' : 
-                            rec.type === 'warning' ? 'text-yellow-700' : 'text-blue-700'} mt-1">${rec.text}</p>
-                    </div>
-                </div>
-            `).join('');
-            
-            document.getElementById('recommendations').innerHTML = recommendationsHtml;
-        }
-
-        // Scenario management functions
-        function saveScenario() {
-            const name = prompt('シナリオ名を入力してください:');
-            if (!name) return;
-            
-            const scenario = {
-                name: name,
-                timestamp: new Date().toLocaleString(),
-                values: {
-                    productPower: parseInt(document.getElementById('productPower').value),
-                    locationAccess: parseInt(document.getElementById('locationAccess').value),
-                    customerExperience: parseInt(document.getElementById('customerExperience').value),
-                    inventoryEfficiency: parseInt(document.getElementById('inventoryEfficiency').value),
-                    omnichannel: parseInt(document.getElementById('omnichannel').value)
-                }
+        // Calculate scores for each category
+        function calculateScores() {
+            return {
+                trend: calculateCategoryScore([
+                    'digital-transformation',
+                    'consumer-behavior', 
+                    'sustainability',
+                    'new-business'
+                ]),
+                brand: calculateCategoryScore([
+                    'market-recognition',
+                    'customer-loyalty',
+                    'brand-trust', 
+                    'social-influence'
+                ]),
+                product: calculateCategoryScore([
+                    'product-development',
+                    'quality-function',
+                    'product-lineup',
+                    'customer-needs'
+                ]),
+                environment: calculateCategoryScore([
+                    'omnichannel',
+                    'digital-marketing',
+                    'data-utilization',
+                    'supply-chain'
+                ]),
+                pricing: calculateCategoryScore([
+                    'price-competitiveness',
+                    'pricing-flexibility',
+                    'value-alignment',
+                    'revenue-optimization'
+                ]),
+                cost: calculateCategoryScore([
+                    'procurement-efficiency',
+                    'inventory-efficiency',
+                    'operation-efficiency',
+                    'marketing-roi'
+                ])
             };
-            
-            scenarios.push(scenario);
-            localStorage.setItem('retailECScenarios', JSON.stringify(scenarios));
-            updateScenarioSelect();
-            alert('シナリオが保存されました！');
         }
 
-        function loadScenario() {
-            const select = document.getElementById('scenarioSelect');
-            const selectedIndex = select.selectedIndex - 1;
-            
-            if (selectedIndex >= 0 && scenarios[selectedIndex]) {
-                const scenario = scenarios[selectedIndex];
-                document.getElementById('productPower').value = scenario.values.productPower;
-                document.getElementById('locationAccess').value = scenario.values.locationAccess;
-                document.getElementById('customerExperience').value = scenario.values.customerExperience;
-                document.getElementById('inventoryEfficiency').value = scenario.values.inventoryEfficiency;
-                document.getElementById('omnichannel').value = scenario.values.omnichannel;
-                updateVisualizations();
+        // Calculate score for a category
+        function calculateCategoryScore(sliderIds) {
+            let total = 0;
+            sliderIds.forEach(id => {
+                const slider = document.getElementById(id);
+                if (slider) {
+                    total += parseInt(slider.value);
+                }
+            });
+            return (total / sliderIds.length) * 10;
+        }
+
+        // Calculate total weighted score
+        function calculateTotalScore(scores) {
+            return Math.round(
+                scores.trend * WEIGHTS.trend +
+                scores.brand * WEIGHTS.brand +
+                scores.product * WEIGHTS.product +
+                scores.environment * WEIGHTS.environment +
+                scores.pricing * WEIGHTS.pricing +
+                scores.cost * WEIGHTS.cost
+            );
+        }
+
+        // Update score display
+        function updateScoreDisplay(score) {
+            const scoreElement = document.getElementById('total-score');
+            const scoreBar = document.getElementById('score-bar');
+            const scoreStatus = document.getElementById('score-status');
+
+            scoreElement.textContent = score;
+            scoreBar.style.width = score + '%';
+
+            // Update status and color
+            if (score >= 80) {
+                scoreStatus.textContent = '優秀';
+                scoreStatus.className = 'text-lg font-semibold text-green-600';
+                scoreBar.className = 'bg-gradient-to-r from-green-400 to-green-600 h-4 rounded-full transition-all duration-500';
+            } else if (score >= 60) {
+                scoreStatus.textContent = '良好';
+                scoreStatus.className = 'text-lg font-semibold text-blue-600';
+                scoreBar.className = 'bg-gradient-to-r from-blue-400 to-blue-600 h-4 rounded-full transition-all duration-500';
+            } else if (score >= 40) {
+                scoreStatus.textContent = '要改善';
+                scoreStatus.className = 'text-lg font-semibold text-orange-600';
+                scoreBar.className = 'bg-gradient-to-r from-orange-400 to-orange-600 h-4 rounded-full transition-all duration-500';
+            } else {
+                scoreStatus.textContent = '要緊急改善';
+                scoreStatus.className = 'text-lg font-semibold text-red-600';
+                scoreBar.className = 'bg-gradient-to-r from-red-400 to-red-600 h-4 rounded-full transition-all duration-500';
             }
         }
 
-        function clearScenarios() {
-            if (confirm('全てのシナリオを削除しますか？')) {
-                scenarios = [];
-                localStorage.removeItem('retailECScenarios');
-                updateScenarioSelect();
-                alert('全シナリオが削除されました。');
+        // Update chart with new scores
+        function updateChart(scores) {
+            if (strategyChart) {
+                strategyChart.data.datasets[0].data = [
+                    scores.trend,
+                    scores.brand,
+                    scores.product,
+                    scores.environment,
+                    scores.pricing,
+                    scores.cost
+                ];
+                strategyChart.update('active');
             }
         }
 
-        function updateScenarioSelect() {
-            const select = document.getElementById('scenarioSelect');
-            select.innerHTML = '<option value="">保存済みシナリオを選択</option>';
-            scenarios.forEach((scenario, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = `${scenario.name} (${scenario.timestamp})`;
-                select.appendChild(option);
-            });
+        // Update strategic insights
+        function updateInsights(scores, totalScore) {
+            const categories = {
+                'トレンド適合性': scores.trend,
+                'ブランド力': scores.brand,
+                '商品・サービス力': scores.product,
+                '経営環境': scores.environment,
+                '価格戦略': scores.pricing,
+                'コスト効率': scores.cost
+            };
+
+            // Find strengths and weaknesses
+            const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]);
+            const strengths = sortedCategories.slice(0, 2);
+            const weaknesses = sortedCategories.slice(-2);
+
+            // Update strengths
+            const strengthsElement = document.getElementById('strengths');
+            strengthsElement.innerHTML = strengths.map(([category, score]) => 
+                `<div class="mb-1"><strong>${category}</strong>: ${score.toFixed(1)}点</div>`
+            ).join('');
+
+            // Update weaknesses
+            const weaknessesElement = document.getElementById('weaknesses');
+            weaknessesElement.innerHTML = weaknesses.map(([category, score]) => 
+                `<div class="mb-1"><strong>${category}</strong>: ${score.toFixed(1)}点</div>`
+            ).join('');
+
+            // Generate recommendations
+            const recommendations = generateRecommendations(categories, totalScore);
+            const recommendationsElement = document.getElementById('recommendations');
+            recommendationsElement.innerHTML = recommendations.map(rec => 
+                `<div class="mb-2">• ${rec}</div>`
+            ).join('');
         }
 
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            initCharts();
-            updateScenarioSelect();
-            updateVisualizations();
-            
-            // Add event listeners to all sliders
-            ['productPower', 'locationAccess', 'customerExperience', 'inventoryEfficiency', 'omnichannel'].forEach(id => {
-                document.getElementById(id).addEventListener('input', updateVisualizations);
-            });
-        });
+        // Generate strategic recommendations
+        function generateRecommendations(categories, totalScore) {
+            const recommendations = [];
+
+            // Priority-based recommendations for retail/EC
+            if (categories['トレンド適合性'] < 60) {
+                recommendations.push('デジタル変革への投資を加速し、消費者行動変化に対応したサービス開発を推進してください');
+            }
+
+            if (categories['ブランド力'] < 60) {
+                recommendations.push('SNSマーケティングと顧客エンゲージメント強化により、ブランド認知度と差別化を向上させてください');
+            }
+
+            if (categories['商品・サービス力'] < 60) {
+                recommendations.push('顧客データ分析に基づく商品開発と、パーソナライゼーション戦略を強化してください');
+            }
+
+            if (categories['経営環境'] < 60) {
+                recommendations.push('オムニチャネル戦略を推進し、店舗・EC・アプリの顧客体験を統一してください');
+            }
+
+            if (categories['価格戦略'] < 60) {
+                recommendations.push('競合分析と顧客価値の再定義により、適正な価格戦略を構築してください');
+            }
+
+            if (categories['コスト効率'] < 60) {
+                recommendations.push('在庫管理システムの最適化と、サプライチェーンの効率化を推進してください');
+            }
+
+            // Overall recommendations
+            if (totalScore < 40) {
+                recommendations.unshift('事業戦略の根本的な見直しが必要です。特に収益性とブランド力の向上に集中してください');
+            } else if (totalScore < 60) {
+                recommendations.unshift('デジタル変革と顧客体験向上により、競争優位性を構築してください');
+            } else if (totalScore >= 80) {
+                recommendations.push('現在の強みを活かし、新規事業展開や市場拡大を検討してください');
+            }
+
+            return recommendations.slice(0, 4); // Limit to 4 recommendations
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
-    <script id="html_badge_script1">
-        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
-            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDvO0JLSQ55M26FT3zdvTGSFL4n5Jl24Uu0THk%2FhGHc1%2FdfY5zdHIZqBCDplL1h7ZJCOLcX5hUtVq1xEOfzS1Ge%2FZEPFAdPqX548BMTddOtNR4PgRDOoXGcMiaOpyU%2FCxbEMISdRGL9fPONICOxsDtDh5knBjYPJ2tFduw%2FKMcQb%2Fy4hiI8KBZzyDU6dx8O%2FLm0BPq%2FDQ9wT3sFr%2BF7jGWXMGWQRwgezzHwWdBD4t53hocZTqZpdGQcbPhBDZOlZDz%2FWctRm0TBnGXrLxdWp8jFxH%2BcCm7x5nEMphUnUz3gDjIt75DvjLHfkRfOh11H0JvTNh2BACHxCnTBNcoRaPC12DYt%2FotkMMKKimh5JQYF%2BK5f9z55eKbtZ7tn6tNIBTV9VZblYGytxYbaHOjD9pTkTZrrPMmMP9APyOWJqI5G1IM1QnYaUpWOcjB0KddXnRqW8io8c%2B8UZi%2Fpc25%2BK6i9sQ2%2BEE68DqdT9b%2FW5GtaBhD4o9dPXjSFtmlIDglQKvkc%2Bua44IeLeSHp9SYcu%2B51w%2FFWPyDdkLztWZxHiq%2BIxW";
-        window.__genspark_locale = "ja-JP";
-        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDvO0JLSQ55M26FT3zdvTGSFL4n5Jl24Uu0THk/hGHc1/dfY5zdHIZqBCDplL1h7ZJCOLcX5hUtVq1xEOfzS1Ge/ZEPFAdPqX548BMTddOtNR4PgRDOoXGcMiaOpyU/CxbEMISdRGL9fPONICOxsDtDh5knBjYPJ2tFduw/KMcQb/y4hiI8KBZzyDU6dx8O/Lm0BPq/DQ9wT3sFr+F7jGWXMGWQRwgezzHwWdBD4t53hocZTqZpdGQcbPhBDZOlZDz/WctRm0TBnGXrLxdWp8jFxH+cCm7x5nEMphUnUz3gDjIt75DvjLHfkRfOh11H0JvTNh2BACHxCnTBNcoRaPC12DYt/otkMMKKimh5JQYF+K5f9z55eKbtZ7tn6tNIBTV9VZblYGytxYbaHOjD9pTkTZrrPMmMP9APyOWJqI5G1IM1QnYaUpWOcjB0KddXnRqW8io8c+8UZi/pc25+K6i9sQ2+EE68DqdT9b/W5GtaBhD4o9dPXjSFtmlIDglQKvkc+ua44IeLeSHp9SYcu+51w/FWPyDdkLztWZxHiq+IxW";
-    </script>
-    
-    <script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"></script>
-    
